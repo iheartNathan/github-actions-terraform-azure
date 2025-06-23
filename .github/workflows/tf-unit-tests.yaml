@@ -40,6 +40,8 @@ jobs:
       uses: bridgecrewio/checkov-action@master
       with: 
         framework: terraform
+        output_format: sarif
+        output_file_path: results.sarif
 
     # Upload results to GitHub Advanced Security
     - name: Upload SARIF file

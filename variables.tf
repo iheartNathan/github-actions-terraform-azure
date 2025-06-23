@@ -24,34 +24,9 @@ variable "vm_subnet_prefix" {
 }
 
 
-variable "bastion_subnet_prefix" {
-  description = "Address prefix for the Azure Bastion subnet"
-  type        = list(string)
-}
-
 variable "ssh_port" {
   description = "Port number for SSH access"
   type        = number
-}
-
-variable "kubernetes_api_port" {
-  description = "Port number for Kubernetes API server"
-  type        = number
-}
-
-variable "etcd_ports" {
-  description = "List of ports used by etcd on control plane nodes"
-  type        = list(string)
-}
-
-variable "kubelet_ports" {
-  description = "List of ports used by kubelet, scheduler, and controller-manager"
-  type        = list(string)
-}
-
-variable "nodeport_range" {
-  description = "Port range for Kubernetes NodePort services"
-  type        = string
 }
 
 
