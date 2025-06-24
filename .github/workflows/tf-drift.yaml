@@ -5,27 +5,22 @@ on:
   schedule:
     - cron: '41 3 * * *' # runs nightly at 3:41 am
 
+env:
+  tf_working_dir: infra
+
 #Special permissions required for OIDC authentication
 permissions:
   id-token: write
   contents: read
-  issues: write
-
-#These environment variables are used by the terraform azure provider to setup OIDD authenticate. 
-env:
-  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
-  ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
-  ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
-  ARM_USE_OIDC: true
-  ARM_USE_AZUREAD: true
+  issues: write 
 
 jobs:
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
-    env:
-      #this is needed since we are running terraform with read-only permissions
-      ARM_SKIP_PROVIDER_REGISTRATION: true
+    defaults:
+      run:
+        working-directory: ${{ env.tf_working_dir }}
     outputs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
 
@@ -42,12 +37,28 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
+      #These environment variables are used by the terraform azure provider to setup OIDD authenticate.
+      env:
+        ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+        ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+        ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+        ARM_USE_OIDC: true
+        ARM_USE_AZUREAD: true
+        ARM_SKIP_PROVIDER_REGISTRATION: true
       run: terraform init
 
     # Generates an execution plan for Terraform
     # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
     - name: Terraform Plan
       id: tf-plan
+      #These environment variables are used by the terraform azure provider to setup OIDD authenticate.
+      env:
+        ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+        ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+        ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+        ARM_USE_OIDC: true
+        ARM_USE_AZUREAD: true
+        ARM_SKIP_PROVIDER_REGISTRATION: true
       run: |
         export exitcode=0
         terraform plan -detailed-exitcode -no-color -out tfplan || export exitcode=$?
