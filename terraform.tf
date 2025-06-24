@@ -17,3 +17,9 @@ terraform {
     key                  = "prod.terraform.tfstate"
   }
 }
+
+
+provider "azurerm" {
+  features {}
+  use_oidc = true
+}
