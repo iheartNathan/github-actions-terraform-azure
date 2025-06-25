@@ -96,7 +96,7 @@ jobs:
       - name: Download Destroy Plan
         uses: actions/download-artifact@v4
         with:
-          name: tfdestroy
+          name: tfdestroyplan
           path: ${{ env.tf_working_dir }}
 
       - name: Terraform Destroy Apply
