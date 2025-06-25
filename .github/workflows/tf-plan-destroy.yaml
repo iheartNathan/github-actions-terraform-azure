@@ -53,7 +53,7 @@ jobs:
 
       - name: Show Destroy Plan Summary
         run: |
-          DESTROY_SUMMARY=$(terraform show -no-color tfdestroy)
+          DESTROY_SUMMARY=$(terraform show -no-color tfdestroyplan)
 
           delimiter="$(openssl rand -hex 8)"
           echo "summary<<${delimiter}" >> $GITHUB_OUTPUT
