@@ -3,14 +3,14 @@ variable "rg_name" {
   type        = string
 }
 
-variable "location" {
-  description = "Azure region to deploy resources"
-  type        = string
-  validation {
-    condition     = can(regex("^[a-z]+[a-z0-9]+$", var.location))
-    error_message = "Location must be a valid Azure region string in lowercase."
-  }
-}
+# variable "location" {
+#   description = "Azure region to deploy resources"
+#   type        = string
+#   validation {
+#     condition     = can(regex("^[a-z]+[a-z0-9]+$", var.location))
+#     error_message = "Location must be a valid Azure region string in lowercase."
+#   }
+# }
 
 variable "vnet_address_space" {
   description = "Address space for the virtual network"

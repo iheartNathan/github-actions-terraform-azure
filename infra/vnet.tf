@@ -3,8 +3,8 @@ module "virtual_network" {
   version = "0.8.1"
 
   name                = module.naming.virtual_network.name_unique
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
+  location            = data.azurerm_resource_group.this.location
+  resource_group_name = data.azurerm_resource_group.this.name
   address_space       = var.vnet_address_space
 
   subnets = {
@@ -21,8 +21,8 @@ module "virtual_network" {
 
 resource "azurerm_network_security_group" "vm_nsg" {
   name                = module.naming.network_security_group.name_unique
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
+  location            = data.azurerm_resource_group.this.location
+  resource_group_name = data.azurerm_resource_group.this.name
 
   security_rule {
     name                       = "Allow-SSH"

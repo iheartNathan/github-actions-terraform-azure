@@ -48,6 +48,5 @@ The storage account and identities are created using this shell [script](https:/
 - Runs `terraform init`, `plan` with remote state.
 - If drift is detected - creates or update existing open GitHub Issue titled `Terraform Configuration Drift Detected`, fails the workflow and an alert is raised to the project maintainer.
 - If no drift - close existing open GitHub Issue titled `Terraform Configuration Drift Detected`.
--  when drift is detected, 
 
 

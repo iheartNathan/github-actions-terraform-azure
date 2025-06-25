@@ -12,7 +12,7 @@ module "loadbalancer" {
   source  = "Azure/loadbalancer/azurerm"
   version = "4.4.0"
 
-  resource_group_name = azurerm_resource_group.this.name
+  resource_group_name = data.azurerm_resource_group.this.name
   type                = "public"
   pip_sku             = "Standard"
   allocation_method   = "Static"
@@ -33,8 +33,8 @@ module "loadbalancer" {
 
 resource "azurerm_linux_virtual_machine_scale_set" "linux_vmss" {
   name                = module.naming.linux_virtual_machine_scale_set.name_unique
-  resource_group_name = azurerm_resource_group.this.name
-  location            = azurerm_resource_group.this.location
+  resource_group_name = data.azurerm_resource_group.this.name
+  location            = data.azurerm_resource_group.this.location
   sku                 = "Standard_F2"
   instances           = var.vmss_instance
   admin_username      = var.admin_username
