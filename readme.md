@@ -5,7 +5,7 @@ This repository uses **GitHub Actions** to securely manage Terraform deployments
 
 📦 `Configure Terraform State Location`
 
-Terraform stores its state file in a remote backend to persist infrastructure changes. This setup uses an **Azure Storage Account** with versioning and encryption enabled. The backend block in your Terraform code will need to reference this storage setup.
+Terraform stores its state file in a remote backend to persist infrastructure changes. This setup uses an **Azure Storage Account** with versioning and encryption enabled. The backend [block](https://github.com/iheartnathan/github-actions-terraform-azure/blob/57fb6cadb107c7ce3184c1b1e1a453e9f9e3ea88/infra/providers.tf#L14) in your Terraform code will need to reference this storage setup.
 
 
 🚀 `Create GitHub Environment`
@@ -27,6 +27,7 @@ Two **User Assigned Managed Identities (UAMI)** are created:
 
 Each identity is granted appropriate `Azure Role Assignments` and `federated credential` created for both identities, these credentials allow GitHub Actions to authenticate securely without storing secrets.
 
+The storage account and identities are created using this shell [script](https://github.com/iheartnathan/github-actions-terraform-azure/blob/main/storage-and-identities.sh).
 
 ## 🚀 Workflows Overview
 
