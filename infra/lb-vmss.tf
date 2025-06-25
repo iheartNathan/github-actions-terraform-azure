@@ -26,8 +26,6 @@ module "loadbalancer" {
   lb_probe = {
     http = ["Http", "${var.application_port}", "/"]
   }
-
-  depends_on = [azurerm_resource_group.this]
 }
 
 
