@@ -46,21 +46,8 @@ The storage account and identities are created using this shell [script](https:/
 ### 🔍 `Terraform Drift Detection`
 - Uses `cron syntax` to run the workflow automatically every day at **3:41 AM UTC**. The workflow can also be triggered manually in the GitHub UI.
 - Runs `terraform init`, `plan` with remote state.
-- If drift is detected - creates or update existing open GitHub Issue titled `Terraform Configuration Drift Detected`
+- If drift is detected - creates or update existing open GitHub Issue titled `Terraform Configuration Drift Detected`, fails the workflow and an alert is raised to the project maintainer.
 - If no drift - close existing open GitHub Issue titled `Terraform Configuration Drift Detected`.
-- Fails the workflow when drift is detected (useful for alerts).
-
-
-## 🔐 Secure Azure Authentication with OIDC
-
-This project uses **Azure Workload Identity Federation** to authenticate GitHub Actions workflows with **federated identities** — eliminating the need for service principal secrets.
-
-
-We create two **User‑Assigned Managed Identities (UAMI)** in Azure using the Azure CLI:
-
-| Identity Name    | Purpose                            |
-|------------------|------------------------------------|
-| `github-uami-rw` | Read/write operation (`terraform apply`) in the `production` environment|
-| `github-uami-ro` | Read‑only operations (`plan`/`fmt`/`validate`) on push and pull request event targeting `main` |
+-  when drift is detected, 
 
 
