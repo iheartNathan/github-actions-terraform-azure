@@ -30,7 +30,7 @@ Two **User Assigned Managed Identities (UAMI)** are created:
 - `github-uami-rw`: For read/write operation (`terraform apply`), used only in `production` environment.
 - `github-uami-ro`: For read-only operations (`plan`/`fmt`/`validate`) targeting the `main` branch.
 
-Each identity is granteda ppropriate `Azure Role Assignments` and `federated credential` created for both identities, these credentials allow GitHub Actions to authenticate securely without storing secrets.
+Each identity is granted appropriate `Azure Role Assignments` and `federated credential` created for both identities, these credentials allow GitHub Actions to authenticate securely without storing secrets.
 
 
 ## 🚀 Workflows Overview
