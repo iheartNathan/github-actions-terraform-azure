@@ -21,6 +21,8 @@ INFRA_RESOURCE_GROUP_NAME="vmss-rg-$RANDOM"
 
 # Azure context
 SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+TENANT_ID=$(az account show --query tenantId -o tsv)
+
 
 # Create infra resource group 
 echo "🗂️ Creating infra resource group..."
@@ -164,6 +166,10 @@ CLIENT_ID_RO=$(az identity show \
 
 echo ""
 echo "✅ Setup complete!"
-echo "🔐 CLIENT_ID_RW (use in production env): $CLIENT_ID_RW"
-echo "🔐 CLIENT_ID_RO (use in repo-level secrets): $CLIENT_ID_RO"
-echo "🧾 ID Resource Group: $ID_RESOURCE_GROUP_NAME"
+echo "🔐 CLIENT_ID_RW (use in environment-level secret): $CLIENT_ID_RW"
+echo "🔐 CLIENT_ID_RO (use in repo-level secret): $CLIENT_ID_RO"
+echo "🧾 Tenant ID: $TENANT_ID"
+echo "🧾 Subscription ID: $SUBSCRIPTION_ID"
+echo "🧾 Identities Resource Group: $ID_RESOURCE_GROUP_NAME"
+echo "🧾 Infrastructure Resource Group: $INFRA_RESOURCE_GROUP_NAME"
+echo "🧾 Storage Account Resource Group: $STORAGE_RESOURCE_GROUP_NAME"
