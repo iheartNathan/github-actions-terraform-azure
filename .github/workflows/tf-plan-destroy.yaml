@@ -52,6 +52,7 @@ jobs:
           path: ${{ env.tf_working_dir }}/tfdestroyplan
 
       - name: Show Destroy Plan Summary
+        id: tf-destroy-string
         run: |
           DESTROY_SUMMARY=$(terraform show -no-color tfdestroyplan)
 
