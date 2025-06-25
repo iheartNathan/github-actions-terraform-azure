@@ -37,4 +37,33 @@ We create two **User‑Assigned Managed Identities (UAMI)** in Azure using the A
 | `github-uami-rw` | Read/write operation (`terraform apply`) in the `production` environment|
 | `github-uami-ro` | Read‑only operations (`plan`/`fmt`/`validate`) on push and pull request event targeting `main` |
 
-### 🧱 1. Create resource group for the identities, role assignment, and federated credentials.
+# ⚙️ GitHub OIDC Setup for Terraform on Azure
+
+This setup provisions all necessary Azure resources and configurations for secure and automated infrastructure deployment via GitHub Actions using **OpenID Connect (OIDC)**.
+
+
+📦 `Configure Terraform State Location`
+
+Terraform stores its state file in a remote backend to persist infrastructure changes. This setup uses an **Azure Storage Account** with versioning and encryption enabled. The backend block in your Terraform code will need to reference this storage setup.
+
+
+🚀 `Create GitHub Environment`
+
+Create a GitHub environment named `production` with:
+
+- Required reviewers for `terraform apply` runs (via [deployment protection rules](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-protection-rules))
+- Environment-level secrets:
+  - `AZURE_CLIENT_ID` from `github-uami-rw`
+
+This ensures that `terraform apply` is only run after approvals.
+
+🔐 `Set Up Azure Identity`
+
+Two **User Assigned Managed Identities (UAMI)** are created:
+
+- `github-uami-rw`: For read/write operation (`terraform apply`), used only in `production` environment.
+- `github-uami-ro`: For read-only operations (`plan`/`fmt`/`validate`) targeting the `main` branch.
+
+Each identity is granteda ppropriate `Azure Role Assignments` and `federated credential` created for both identities, these credentials allow GitHub Actions to authenticate securely without storing secrets.
+
+---
