@@ -3,11 +3,6 @@
 This repository uses **GitHub Actions** to securely manage Terraform deployments and detect configuration drift in Azure using 
 **OIDC authentication**
 
-# ⚙️ GitHub OIDC Setup for Terraform on Azure
-
-This setup provisions all necessary Azure resources and configurations for secure and automated infrastructure deployment via GitHub Actions using **OpenID Connect (OIDC)**.
-
-
 📦 `Configure Terraform State Location`
 
 Terraform stores its state file in a remote backend to persist infrastructure changes. This setup uses an **Azure Storage Account** with versioning and encryption enabled. The backend block in your Terraform code will need to reference this storage setup.
