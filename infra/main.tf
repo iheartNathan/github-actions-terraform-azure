@@ -5,12 +5,6 @@ module "naming" {
 }
 
 
-resource "azurerm_resource_group" "this" {
-  location = var.location
-  name     = var.rg_name
-}
-
-
 data "azurerm_resource_group" "this" {
   name = var.rg_name
 }
