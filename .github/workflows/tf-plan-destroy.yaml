@@ -1,0 +1,103 @@
+name: 'Terraform Destroy'
+
+on:
+  workflow_dispatch:
+
+env:
+  tf_working_dir: infra
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform-destroy-plan:
+    name: 'Terraform Destroy Plan'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.tf_working_dir }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        env:
+          ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+          ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+          ARM_USE_OIDC: true
+          ARM_USE_AZUREAD: true
+          ARM_SKIP_PROVIDER_REGISTRATION: true
+        run: terraform init
+
+      - name: Terraform Plan Destroy
+        run: terraform plan -destroy -out tfdestroyplan -no-color
+
+      - name: Upload Destroy Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfdestroyplan
+          path: ${{ env.tf_working_dir }}/tfdestroyplan
+
+      - name: Show Destroy Plan Summary
+        run: |
+          DESTROY_SUMMARY=$(terraform show -no-color tfdestroy)
+
+          delimiter="$(openssl rand -hex 8)"
+          echo "summary<<${delimiter}" >> $GITHUB_OUTPUT
+          echo "## Terraform Destroy Plan Output" >> $GITHUB_OUTPUT
+          echo "<details><summary>Click to expand</summary>" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo '```terraform' >> $GITHUB_OUTPUT
+          echo "$DESTROY_SUMMARY" >> $GITHUB_OUTPUT
+          echo '```' >> $GITHUB_OUTPUT
+          echo "</details>" >> $GITHUB_OUTPUT
+          echo "${delimiter}" >> $GITHUB_OUTPUT
+
+  terraform-destroy-apply:
+    name: 'Terraform Destroy Apply'
+    if: ${{ github.ref == 'refs/heads/main' }}
+    defaults:
+      run:
+        working-directory: ${{ env.tf_working_dir }}
+    runs-on: ubuntu-latest
+    environment: production
+    needs: [terraform-destroy-plan]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        env:
+          ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+          ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+          ARM_USE_OIDC: true
+          ARM_USE_AZUREAD: true
+          ARM_SKIP_PROVIDER_REGISTRATION: true
+        run: terraform init
+
+      - name: Download Destroy Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfdestroy
+          path: ${{ env.tf_working_dir }}
+
+      - name: Terraform Destroy Apply
+        env:
+          ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+          ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+          ARM_USE_OIDC: true
+          ARM_USE_AZUREAD: true
+          ARM_SKIP_PROVIDER_REGISTRATION: true
+        run: terraform apply -auto-approve tfdestroyplan
