@@ -93,7 +93,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: tfplan
-        path: infra/tfplan
+        path: ${{ env.tf_working_dir }}/tfplan
         
     # Create string output of Terraform Plan
     - name: Create String Output
@@ -172,7 +172,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: tfplan
-        path: infra/
+        path: ${{ env.tf_working_dir }}
 
     # Terraform Apply
     - name: Terraform Apply
