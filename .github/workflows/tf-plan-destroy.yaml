@@ -66,6 +66,13 @@ jobs:
           echo "</details>" >> $GITHUB_OUTPUT
           echo "${delimiter}" >> $GITHUB_OUTPUT
 
+      - name: Publish Destroy Plan to Task Summary
+        env:
+          SUMMARY: "${{ steps.tf-destroy-string.outputs.summary }}"
+        run: |
+          echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+      
+
   terraform-destroy-apply:
     name: 'Terraform Destroy Apply'
     if: ${{ github.ref == 'refs/heads/main' }}
